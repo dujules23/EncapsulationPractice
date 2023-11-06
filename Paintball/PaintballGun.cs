@@ -3,40 +3,48 @@ namespace Application
 {
 	public class PaintballGun
 	{
-		public PaintballGun()
+		public PaintballGun(int balls, int magazineSize, bool loaded)
 		{
+            this.balls = balls;
+            MagazineSize = magazineSize;
+            if (!loaded) Reload();
 		}
 
-        public const int MAGAZINE_SIZE = 16;
+        // Removed constant and made a property; you can still intialize by adding an assignment to the end of the declaration.
+        public int MagazineSize { get; private set; } = 16;
 
         private int balls = 0;
-        private int ballsLoaded = 0;
+        // Removed the property and made a new one using an auto-implemented property
+        public int BallsLoaded { get; private set; }
 
-        public int GetBallsLoaded() { return ballsLoaded;}
+        public bool IsEmpty() { return BallsLoaded == 0; }
 
-        public bool IsEmpty() { return ballsLoaded == 0; }
+        // Removed GetBalls() and SetBalls() methods and created a 'Balls' property instead
 
-        public int GetBalls() { return balls; }
-
-        public void SetBalls(int numberOfBalls)
+        public int Balls
         {
-            if (numberOfBalls > 0)
-                balls = numberOfBalls;
-            Reload();
+            get { return balls; }
+
+            set
+            {
+                if (value > 0)
+                    balls = value;
+                Reload();
+            }
         }
 
         public void Reload()
         {
-            if (balls > MAGAZINE_SIZE)
-                ballsLoaded = MAGAZINE_SIZE;
+            if (balls > MagazineSize)
+                BallsLoaded = MagazineSize;
             else
-                ballsLoaded = balls;
+                BallsLoaded = balls;
         }
 
         public bool Shoot()
         {
-            if (ballsLoaded == 0) return false;
-            ballsLoaded--;
+            if (BallsLoaded == 0) return false;
+            BallsLoaded--;
             balls--;
             return true;
         }
